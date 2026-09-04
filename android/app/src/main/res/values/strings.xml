@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Remix RevenueFlow</string>
+    <string name="title_activity_main">Remix RevenueFlow</string>
+    <string name="package_name">com.remix.revenueflow</string>
+    <string name="custom_url_scheme">com.remix.revenueflow</string>
+</resources>

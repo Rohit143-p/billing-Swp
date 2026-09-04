@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "RevenueFlow Schema",
+  "description": "Firestore database blueprint for RevenueFlow billing, invoicing, expenses, and business settings.",
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with role and business details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["owner", "manager", "accountant", "staff"] },
+        "businessName": { "type": "string" },
+        "phone": { "type": "string" },
+        "avatarColor": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "role", "businessName", "createdAt"]
+    },
+    "Bill": {
+      "title": "Bill",
+      "description": "Customer invoice / bill",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerEmail": { "type": "string" },
+        "invoiceNumber": { "type": "string" },
+        "date": { "type": "string" },
+        "dueDate": { "type": "string" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["paid", "pending", "overdue", "draft"] },
+        "type": { "type": "string", "enum": ["raw", "processed", "bulk"] },
+        "items": { "type": "array" },
+        "paymentTerms": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "customerName", "invoiceNumber", "date", "dueDate", "totalAmount", "status", "type"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Business expense record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "amount": { "type": "number" },
+        "date": { "type": "string" },
+        "status": { "type": "string", "enum": ["completed", "pending", "flagged"] },
+        "notes": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "title", "category", "amount", "date", "status"]
+    },
+    "BusinessConfig": {
+      "title": "BusinessConfig",
+      "description": "Business profile, tax regime, and invoicing parameters",
+      "type": "object",
+      "properties": {
+        "businessName": { "type": "string" },
+        "tagline": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "taxType": { "type": "string" },
+        "taxRate": { "type": "number" },
+        "taxIdNumber": { "type": "string" },
+        "currency": { "type": "string" },
+        "currencyCode": { "type": "string" },
+        "invoicePrefix": { "type": "string" },
+        "brandColor": { "type": "string" },
+        "brandShort": { "type": "string" },
+        "bankName": { "type": "string" },
+        "accountNumber": { "type": "string" },
+        "routingOrIfsc": { "type": "string" },
+        "upiOrPaypal": { "type": "string" },
+        "footerNote": { "type": "string" },
+        "termsAndConditions": { "type": "string" }
+      },
+      "required": ["businessName", "currency", "taxType", "taxRate", "invoicePrefix"]
+    },
+    "NotificationItem": {
+      "title": "NotificationItem",
+      "description": "User notification alert",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "date": { "type": "string" },
+        "read": { "type": "boolean" },
+        "type": { "type": "string", "enum": ["alert", "info", "success"] },
+        "userId": { "type": "string" }
+      },
+      "required": ["id", "title", "message", "date", "read", "type"]
+    },
+    "InventoryItem": {
+      "title": "InventoryItem",
+      "description": "Stock tracking item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sku": { "type": "string" },
+        "name": { "type": "string" },
+        "currentQty": { "type": "number" },
+        "reorderPt": { "type": "number" },
+        "unitPrice": { "type": "number" },
+        "category": { "type": "string" },
+        "status": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["id", "sku", "name", "currentQty", "reorderPt", "unitPrice", "category"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "#/entities/User",
+      "description": "Registered user accounts"
+    },
+    "/bills/{billId}": {
+      "schema": "#/entities/Bill",
+      "description": "Invoices and customer bills"
+    },
+    "/expenses/{expenseId}": {
+      "schema": "#/entities/Expense",
+      "description": "Business expense logs"
+    },
+    "/inventory/{itemId}": {
+      "schema": "#/entities/InventoryItem",
+      "description": "Inventory and stock tracking"
+    },
+    "/business_configs/{configId}": {
+      "schema": "#/entities/BusinessConfig",
+      "description": "Business profile and invoicing configuration"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "#/entities/NotificationItem",
+      "description": "System alerts and notifications"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="rf-grad-mask" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="50%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="rf-accent-mask" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#93C5FD"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Full-bleed background extending to the edges (no border-radius for maskable) -->
+  <rect width="512" height="512" fill="url(#rf-grad-mask)"/>
+
+  <!-- Logo Graphics scaled into the 80% safe zone (center: 256, 256; max size ~300) -->
+  <g fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" transform="translate(40, 40) scale(0.84)">
+    <!-- Left Pillar of R -->
+    <path d="M168 140 V372" stroke-width="38"/>
+    
+    <!-- Curved Top Loop of R -->
+    <path d="M168 140 H280 C336 140 376 172 376 226 C376 280 336 312 280 312 H168" stroke-width="38"/>
+    
+    <!-- Dynamic Ascending Leg of R -->
+    <path d="M260 296 L356 372" stroke-width="38"/>
+    
+    <!-- Growth spark accent -->
+    <circle cx="376" cy="148" r="22" fill="url(#rf-accent-mask)" stroke="none"/>
+
+    <circle cx="168" cy="140" r="14" fill="#FFFFFF"/>
+    <circle cx="168" cy="372" r="14" fill="#FFFFFF"/>
+    <circle cx="356" cy="372" r="14" fill="#FFFFFF"/>
+  </g>
+</svg>

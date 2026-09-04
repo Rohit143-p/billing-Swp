@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="rf-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="50%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="rf-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#93C5FD"/>
+    </linearGradient>
+    <filter id="rf-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#1E3A8A" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Background container with smooth corners -->
+  <rect width="512" height="512" rx="112" fill="url(#rf-grad)"/>
+
+  <!-- Subtle inner background highlight ring -->
+  <rect x="16" y="16" width="480" height="480" rx="96" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+
+  <!-- Logo Graphics: Modern Stylized 'R' with Ascending Revenue Arrow -->
+  <g filter="url(#rf-shadow)" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left Pillar of R -->
+    <path d="M168 140 V372" stroke-width="38"/>
+    
+    <!-- Curved Top Loop of R -->
+    <path d="M168 140 H280 C336 140 376 172 376 226 C376 280 336 312 280 312 H168" stroke-width="38"/>
+    
+    <!-- Dynamic Ascending Leg of R transitioning to upward trend arrow -->
+    <path d="M260 296 L356 372" stroke-width="38"/>
+    
+    <!-- Growth spark accent -->
+    <circle cx="376" cy="148" r="22" fill="url(#rf-accent)" stroke="none"/>
+  </g>
+
+  <!-- Small accent chart dots -->
+  <circle cx="168" cy="140" r="14" fill="#FFFFFF"/>
+  <circle cx="168" cy="372" r="14" fill="#FFFFFF"/>
+  <circle cx="356" cy="372" r="14" fill="#FFFFFF"/>
+</svg>
