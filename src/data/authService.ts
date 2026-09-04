@@ -68,7 +68,11 @@ export function getRegisteredUsers(): UserAccount[] {
     }
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed) && parsed.length > 0) {
-      return parsed;
+      // Filter only valid UserAccount objects to prevent crashes from corrupted entries
+      const valid = parsed.filter((u): u is UserAccount => Boolean(u && typeof u === 'object' && typeof u.email === 'string' && u.email.trim()));
+      if (valid.length > 0) {
+        return valid;
+      }
     }
   } catch (err) {
     console.warn('Failed to load registered users from localStorage:', err);
@@ -79,7 +83,8 @@ export function getRegisteredUsers(): UserAccount[] {
 // Helper to save registered users
 export function saveRegisteredUsers(users: UserAccount[]): void {
   try {
-    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+    const valid = users.filter((u): u is UserAccount => Boolean(u && typeof u === 'object' && typeof u.email === 'string' && u.email.trim()));
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(valid));
   } catch (err) {
     console.warn('Failed to save registered users to localStorage:', err);
   }
@@ -139,10 +144,11 @@ const AVATAR_COLORS = [
 
 export function registerUser(payload: RegisterPayload): { success: boolean; error?: string; user?: UserAccount } {
   const users = getRegisteredUsers();
-  const normalizedEmail = payload.email.trim().toLowerCase();
+  const rawEmail = payload?.email || '';
+  const normalizedEmail = rawEmail.trim().toLowerCase();
 
   // Validate fields
-  if (!payload.name.trim()) {
+  if (!payload?.name || !payload.name.trim()) {
     return { success: false, error: 'Full name is required.' };
   }
   if (!normalizedEmail || !normalizedEmail.includes('@')) {
@@ -151,12 +157,12 @@ export function registerUser(payload: RegisterPayload): { success: boolean; erro
   if (!payload.password || payload.password.length < 6) {
     return { success: false, error: 'Password must be at least 6 characters long.' };
   }
-  if (!payload.businessName.trim()) {
+  if (!payload.businessName || !payload.businessName.trim()) {
     return { success: false, error: 'Business / Company name is required.' };
   }
 
-  // Check email collision
-  const existing = users.find(u => u.email.toLowerCase() === normalizedEmail);
+  // Check email collision safely
+  const existing = users.find(u => (u?.email || '').trim().toLowerCase() === normalizedEmail);
   if (existing) {
     return { success: false, error: 'An account with this email address already exists. Please log in instead.' };
   }
@@ -189,7 +195,7 @@ export function registerUser(payload: RegisterPayload): { success: boolean; erro
 // Login function
 export function loginUser(email: string, password: string): { success: boolean; error?: string; session?: AuthSession } {
   const users = getRegisteredUsers();
-  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedEmail = (email || '').trim().toLowerCase();
 
   if (!normalizedEmail) {
     return { success: false, error: 'Please enter your email address.' };
@@ -198,7 +204,7 @@ export function loginUser(email: string, password: string): { success: boolean; 
     return { success: false, error: 'Please enter your password.' };
   }
 
-  const user = users.find(u => u.email.toLowerCase() === normalizedEmail);
+  const user = users.find(u => (u?.email || '').trim().toLowerCase() === normalizedEmail);
   if (!user) {
     return { success: false, error: 'No account found with this email. Please verify or register a new account.' };
   }
@@ -222,7 +228,7 @@ export function loginUser(email: string, password: string): { success: boolean; 
 // Helper to switch directly to a demo account
 export function loginDemoUser(userId: string): { success: boolean; session?: AuthSession } {
   const users = getRegisteredUsers();
-  const user = users.find(u => u.id === userId) || INITIAL_DEMO_USERS[0];
+  const user = users.find(u => u?.id === userId) || INITIAL_DEMO_USERS[0];
 
   const session: AuthSession = {
     user,
@@ -240,10 +246,14 @@ export function mergeUsersWithLocalCache(remoteUsers: UserAccount[]): void {
     const localUsers = getRegisteredUsers();
     const userMap = new Map<string, UserAccount>();
     for (const u of localUsers) {
-      userMap.set(u.id, u);
+      if (u && u.id && u.email) {
+        userMap.set(u.id, u);
+      }
     }
-    for (const r of remoteUsers) {
-      userMap.set(r.id, r);
+    for (const r of (remoteUsers || [])) {
+      if (r && r.id && r.email) {
+        userMap.set(r.id, r);
+      }
     }
     const merged = Array.from(userMap.values());
     saveRegisteredUsers(merged);
