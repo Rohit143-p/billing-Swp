@@ -37,8 +37,8 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ currentTab, onSelect
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 w-full z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-lg md:hidden pb-[max(0.25rem,env(safe-area-inset-bottom))]">
-      <div className="flex justify-around items-center px-1.5 py-1 max-w-md mx-auto">
+    <nav className="fixed bottom-0 left-0 right-0 w-full z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-lg md:hidden pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom,0px))]">
+      <div className="flex justify-around items-center px-2 py-0.5 max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = currentTab === item.id;
           return (

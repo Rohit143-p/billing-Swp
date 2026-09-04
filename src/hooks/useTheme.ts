@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ThemeMode } from '../types';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 const THEME_STORAGE_KEY = 'revenueflow_theme';
 
@@ -28,7 +30,7 @@ export function useTheme() {
   });
 
   useEffect(() => {
-    const applyTheme = () => {
+    const applyTheme = async () => {
       let resolvedDark = false;
       if (themeMode === 'dark') {
         resolvedDark = true;
@@ -48,7 +50,22 @@ export function useTheme() {
         document.documentElement.classList.add('light');
       }
 
-      // Dynamically update mobile browser status bar & theme-color
+      // 1. Update native Capacitor Android / iOS Status Bar
+      if (Capacitor.isNativePlatform()) {
+        try {
+          if (resolvedDark) {
+            await StatusBar.setStyle({ style: Style.Dark }); // White text/icons on dark bg
+            await StatusBar.setBackgroundColor({ color: '#020617' });
+          } else {
+            await StatusBar.setStyle({ style: Style.Light }); // Dark text/icons on light bg
+            await StatusBar.setBackgroundColor({ color: '#FFFFFF' });
+          }
+        } catch (err) {
+          console.warn('Capacitor StatusBar update error:', err);
+        }
+      }
+
+      // 2. Dynamically update mobile web browser status bar & theme-color
       try {
         let metaTheme = document.querySelector('meta[name="theme-color"]');
         if (!metaTheme) {
