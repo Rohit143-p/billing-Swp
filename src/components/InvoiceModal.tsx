@@ -16,7 +16,9 @@ import {
   FileDown,
   FileText,
   ExternalLink,
-  Loader2
+  Loader2,
+  Mail,
+  MessageSquare
 } from 'lucide-react';
 import { Bill, BusinessConfig, PaymentMode } from '../types';
 import { loadSavedBusinessConfig } from '../data/businessPresets';
@@ -115,6 +117,22 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
       `Hello ${bill.customerName},\n\nHere is your invoice ${bill.billNumber} from ${activeConfig.businessName} for ${bill.currency}${bill.total.toLocaleString()}.\nStatus: ${bill.status.toUpperCase()}\n\nThank you for your business!`
     );
     window.open(`https://wa.me/?text=${text}`, '_blank');
+  };
+
+  const handleShareSMS = () => {
+    const text = encodeURIComponent(
+      `Invoice ${bill.billNumber} from ${activeConfig.businessName} for ${bill.currency}${bill.total.toLocaleString()} is ${bill.status.toUpperCase()}. Due: ${bill.dueDate || 'Immediate'}. Thank you!`
+    );
+    const cleanPhone = bill.phoneNumber ? bill.phoneNumber.replace(/[^0-9+]/g, '') : '';
+    window.location.href = `sms:${cleanPhone}?body=${text}`;
+  };
+
+  const handleShareEmail = () => {
+    const subject = encodeURIComponent(`Invoice ${bill.billNumber} from ${activeConfig.businessName}`);
+    const body = encodeURIComponent(
+      `Dear ${bill.customerName},\n\nPlease find your invoice details below:\n\n• Invoice Number: ${bill.billNumber}\n• Date: ${bill.date}\n• Due Date: ${bill.dueDate || 'Immediate'}\n• Amount Due: ${bill.currency}${bill.total.toLocaleString()}\n• Status: ${bill.status.toUpperCase()}\n\nPayment Mode: ${bill.paymentMode || 'UPI/QR'}\n${activeConfig.upiOrPaypal ? `Payment UPI/ID: ${activeConfig.upiOrPaypal}\n` : ''}\nThank you for your business!\n\nBest regards,\n${activeConfig.businessName}\n${activeConfig.email || ''}`
+    );
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
   };
 
   const handleExportIcs = () => {
@@ -285,10 +303,28 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
             {/* WhatsApp Share */}
             <button
               onClick={handleShareWhatsApp}
-              title="Share summary on WhatsApp"
+              title="Share summary on WhatsApp (Free)"
               className="p-1.5 sm:p-2 text-emerald-600 dark:text-emerald-400 bg-white dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 rounded-lg border border-emerald-200 dark:border-emerald-800/80 transition-colors cursor-pointer active:scale-95 shadow-2xs"
             >
               <Share2 className="w-4 h-4" />
+            </button>
+
+            {/* Direct SMS */}
+            <button
+              onClick={handleShareSMS}
+              title="Send via Phone SMS Messenger (Free)"
+              className="p-1.5 sm:p-2 text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/50 rounded-lg border border-blue-200 dark:border-blue-800/80 transition-colors cursor-pointer active:scale-95 shadow-2xs"
+            >
+              <MessageSquare className="w-4 h-4" />
+            </button>
+
+            {/* Direct Email */}
+            <button
+              onClick={handleShareEmail}
+              title="Send via Default Email App / Gmail (Free)"
+              className="p-1.5 sm:p-2 text-indigo-600 dark:text-indigo-400 bg-white dark:bg-slate-900 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 rounded-lg border border-indigo-200 dark:border-indigo-800/80 transition-colors cursor-pointer active:scale-95 shadow-2xs"
+            >
+              <Mail className="w-4 h-4" />
             </button>
 
             {/* Close */}
@@ -560,11 +596,47 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
           </div>
 
           {/* Delivery Channels */}
-          <div className="flex items-center gap-3 pt-2 text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-850 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800">
-            <span className="font-semibold text-slate-500 dark:text-slate-400">Dispatch Channels:</span>
-            {bill.delivery.whatsapp && <span className="text-emerald-700 dark:text-emerald-400 font-medium">✓ WhatsApp</span>}
-            {bill.delivery.sms && <span className="text-blue-700 dark:text-blue-400 font-medium">✓ SMS</span>}
-            {bill.delivery.email && <span className="text-indigo-700 dark:text-indigo-400 font-medium">✓ Email</span>}
+          <div className="flex flex-wrap items-center gap-2 pt-2 text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-850 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="font-semibold text-slate-500 dark:text-slate-400 mr-1">Instant Dispatch:</span>
+            <button
+              type="button"
+              onClick={handleShareWhatsApp}
+              className={`px-2 py-0.5 rounded-md font-medium text-[11px] transition-colors cursor-pointer flex items-center gap-1 ${
+                bill.delivery.whatsapp
+                  ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/60'
+                  : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-300'
+              }`}
+              title="Click to send invoice via WhatsApp (Free)"
+            >
+              <Share2 className="w-3 h-3" />
+              WhatsApp
+            </button>
+            <button
+              type="button"
+              onClick={handleShareSMS}
+              className={`px-2 py-0.5 rounded-md font-medium text-[11px] transition-colors cursor-pointer flex items-center gap-1 ${
+                bill.delivery.sms
+                  ? 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/60'
+                  : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-300'
+              }`}
+              title="Click to send invoice via default SMS App (Free)"
+            >
+              <MessageSquare className="w-3 h-3" />
+              SMS
+            </button>
+            <button
+              type="button"
+              onClick={handleShareEmail}
+              className={`px-2 py-0.5 rounded-md font-medium text-[11px] transition-colors cursor-pointer flex items-center gap-1 ${
+                bill.delivery.email
+                  ? 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/60'
+                  : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-300'
+              }`}
+              title="Click to send invoice via Email / Gmail (Free)"
+            >
+              <Mail className="w-3 h-3" />
+              Email
+            </button>
           </div>
         </div>
 

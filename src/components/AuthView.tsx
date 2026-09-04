@@ -738,20 +738,24 @@ export const AuthView: React.FC<AuthViewProps> = ({ onLoginSuccess, config, isDa
 
             {forgotSent ? (
               <div className="space-y-3">
-                <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 space-y-2">
-                  <div className="flex items-center gap-2 font-semibold text-emerald-900">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>Account Verified via Cloud Database</span>
+                <div className={`p-4 rounded-xl text-xs space-y-2 border ${
+                  forgotAccountFound
+                    ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200'
+                    : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200'
+                }`}>
+                  <div className="flex items-center gap-2 font-semibold">
+                    <Check className="w-4 h-4 shrink-0" />
+                    <span>{forgotAccountFound ? 'Instant Cloud Account Recovery (No OTP Needed)' : 'Account Check Complete'}</span>
                   </div>
                   {forgotAccountFound ? (
-                    <div className="p-2.5 bg-white/80 rounded-lg border border-emerald-200 space-y-1 text-slate-800">
-                      <div><span className="font-semibold text-slate-500">Name:</span> {forgotAccountFound.name}</div>
-                      <div><span className="font-semibold text-slate-500">Business:</span> {forgotAccountFound.businessName}</div>
-                      <div><span className="font-semibold text-slate-500">Password:</span> <span className="font-mono font-bold text-blue-600">{forgotAccountFound.password}</span></div>
+                    <div className="p-2.5 bg-white/90 dark:bg-slate-900/90 rounded-lg border border-emerald-200 dark:border-emerald-800 space-y-1 text-slate-800 dark:text-slate-100">
+                      <div><span className="font-semibold text-slate-500 dark:text-slate-400">Name:</span> {forgotAccountFound.name}</div>
+                      <div><span className="font-semibold text-slate-500 dark:text-slate-400">Business:</span> {forgotAccountFound.businessName}</div>
+                      <div><span className="font-semibold text-slate-500 dark:text-slate-400">Password:</span> <span className="font-mono font-bold text-blue-600 dark:text-blue-400">{forgotAccountFound.password}</span></div>
                     </div>
                   ) : (
-                    <p className="text-slate-600">
-                      If an account exists for <span className="font-semibold">{forgotEmail}</span>, a secure verification link has been dispatched.
+                    <p className="text-slate-600 dark:text-slate-300">
+                      No account registered with <span className="font-semibold">{forgotEmail}</span> was found in the cloud database. Please check your spelling or register a new account.
                     </p>
                   )}
                 </div>
