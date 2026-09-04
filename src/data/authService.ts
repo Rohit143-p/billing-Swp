@@ -137,7 +137,7 @@ const AVATAR_COLORS = [
   '#db2777'  // pink
 ];
 
-export function registerUser(payload: RegisterPayload): { success: boolean; error?: string; session?: AuthSession } {
+export function registerUser(payload: RegisterPayload): { success: boolean; error?: string; user?: UserAccount } {
   const users = getRegisteredUsers();
   const normalizedEmail = payload.email.trim().toLowerCase();
 
@@ -183,15 +183,7 @@ export function registerUser(payload: RegisterPayload): { success: boolean; erro
   // Sync with Firebase Firestore users collection asynchronously
   saveUserToFirestore(newUser).catch(err => console.warn('Could not sync user with Firestore:', err));
 
-  const session: AuthSession = {
-    user: newUser,
-    token: `tok_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-    loginAt: new Date().toISOString()
-  };
-
-  saveActiveSession(session);
-
-  return { success: true, session };
+  return { success: true, user: newUser };
 }
 
 // Login function

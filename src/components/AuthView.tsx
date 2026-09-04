@@ -143,12 +143,24 @@ export const AuthView: React.FC<AuthViewProps> = ({ onLoginSuccess, config, isDa
       const res = await registerUser(payload);
       setIsLoading(false);
 
-      if (res.success && res.session) {
-        setSuccessMessage(`Account created successfully! Redirecting to dashboard...`);
+      if (res.success) {
+        // Pre-fill login email with the newly registered account email
+        const registeredEmail = regEmail.trim().toLowerCase();
+        setLoginEmail(registeredEmail);
+        setLoginPassword('');
+
+        // Reset registration fields
+        setRegName('');
+        setRegEmail('');
+        setRegPassword('');
+        setRegConfirmPassword('');
+        setRegBusinessName('');
+        setRegPhone('');
+
+        // Switch to Login mode
+        setMode('login');
+        setSuccessMessage('Account created successfully! Please sign in with your email and password.');
         triggerSuccessBurst();
-        setTimeout(() => {
-          onLoginSuccess(res.session!);
-        }, 450);
       } else {
         setErrorMessage(res.error || 'Failed to register account.');
       }
@@ -662,7 +674,7 @@ export const AuthView: React.FC<AuthViewProps> = ({ onLoginSuccess, config, isDa
                     </>
                   ) : (
                     <>
-                      <span>Complete Registration & Launch</span>
+                      <span>Create Account & Continue to Sign In</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
