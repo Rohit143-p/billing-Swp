@@ -31,6 +31,7 @@ import {
   RegisterPayload
 } from '../data/authService';
 import { findFirestoreUserByEmail } from '../lib/firebase';
+import { sendWelcomeEmail } from '../services/emailService';
 
 interface AuthViewProps {
   onLoginSuccess: (session: AuthSession) => void;
@@ -143,7 +144,14 @@ export const AuthView: React.FC<AuthViewProps> = ({ onLoginSuccess, config, isDa
       const res = await registerUser(payload);
       setIsLoading(false);
 
-      if (res.success) {
+      if (res.success && res.user) {
+        // Trigger welcome email asynchronously (if EmailJS is configured)
+        sendWelcomeEmail({
+          name: res.user.name,
+          email: res.user.email,
+          businessName: res.user.businessName
+        }).catch(err => console.log('Welcome email dispatch note:', err));
+
         // Pre-fill login email with the newly registered account email
         const registeredEmail = regEmail.trim().toLowerCase();
         setLoginEmail(registeredEmail);
@@ -308,10 +316,25 @@ export const AuthView: React.FC<AuthViewProps> = ({ onLoginSuccess, config, isDa
               <motion.div
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-5 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-start gap-2.5"
+                className="mb-5 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-start justify-between gap-2.5 flex-wrap"
               >
-                <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
-                <div className="leading-relaxed">{errorMessage}</div>
+                <div className="flex items-start gap-2.5 flex-1 min-w-[200px]">
+                  <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                  <div className="leading-relaxed">{errorMessage}</div>
+                </div>
+                {errorMessage.includes('already exists') && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (regEmail) setLoginEmail(regEmail.trim().toLowerCase());
+                      setErrorMessage(null);
+                      setMode('login');
+                    }}
+                    className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-lg text-xs cursor-pointer shadow-xs transition-colors shrink-0"
+                  >
+                    Go to Sign In →
+                  </button>
+                )}
               </motion.div>
             )}
 

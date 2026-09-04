@@ -30,6 +30,12 @@ import {
 import confetti from 'canvas-confetti';
 import { BusinessConfig, UserAccount, ThemeMode } from '../types';
 import { INDUSTRY_PRESETS, IndustryPreset, DEFAULT_BUSINESS_CONFIG } from '../data/businessPresets';
+import {
+  getEmailConfig,
+  saveEmailConfig,
+  sendTestEmail,
+  EmailJSConfig
+} from '../services/emailService';
 
 interface BusinessConfigViewProps {
   config: BusinessConfig;
@@ -54,8 +60,14 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
 }) => {
   const [formData, setFormData] = useState<BusinessConfig>({ ...config });
   const [savedNotice, setSavedNotice] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'profile' | 'tax' | 'invoicing' | 'banking' | 'inventory' | 'presets' | 'data'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'tax' | 'invoicing' | 'banking' | 'email' | 'inventory' | 'presets' | 'data'>('profile');
   const [previewTab, setPreviewTab] = useState<'invoice' | 'raw'>('invoice');
+
+  // EmailJS Settings State
+  const [emailConfig, setEmailConfig] = useState<EmailJSConfig>(getEmailConfig());
+  const [isTestingEmail, setIsTestingEmail] = useState(false);
+  const [testEmailStatus, setTestEmailStatus] = useState<{ success?: boolean; message?: string } | null>(null);
+  const [testEmailTarget, setTestEmailTarget] = useState(currentUser?.email || formData.email || '');
 
   // Brand color presets
   const COLOR_SWATCHES = [
@@ -96,9 +108,20 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
     setTimeout(() => setSavedNotice(null), 3500);
   };
 
+  const handleTestEmail = async () => {
+    if (!testEmailTarget) return;
+    setIsTestingEmail(true);
+    setTestEmailStatus(null);
+    saveEmailConfig(emailConfig);
+    const result = await sendTestEmail(testEmailTarget);
+    setIsTestingEmail(false);
+    setTestEmailStatus(result);
+  };
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     onSaveConfig(formData);
+    saveEmailConfig(emailConfig);
 
     try {
       confetti({
@@ -110,7 +133,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
       // ignore
     }
 
-    setSavedNotice('Business configuration saved successfully to local storage!');
+    setSavedNotice('Business configuration & email settings saved successfully!');
     setTimeout(() => setSavedNotice(null), 3500);
   };
 
@@ -322,6 +345,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
           { id: 'tax' as const, label: 'Tax & Currency', icon: <Percent className="w-3.5 h-3.5" /> },
           { id: 'invoicing' as const, label: 'Invoicing & Terms', icon: <Receipt className="w-3.5 h-3.5" /> },
           { id: 'banking' as const, label: 'Bank & Payments', icon: <CreditCard className="w-3.5 h-3.5" /> },
+          { id: 'email' as const, label: 'Email & Delivery', icon: <Mail className="w-3.5 h-3.5" /> },
           { id: 'inventory' as const, label: 'Inventory & Alerts', icon: <Package className="w-3.5 h-3.5" /> },
           { id: 'data' as const, label: 'Data & Reset', icon: <RotateCcw className="w-3.5 h-3.5" /> }
         ].map((tab) => {
@@ -873,6 +897,117 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
                   className="w-full px-3.5 py-2 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors"
                 />
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB: Email & Automated Delivery (EmailJS) */}
+        {activeTab === 'email' && (
+          <div className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-6 animate-in fade-in">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-editorial text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+                  Email Delivery Service (EmailJS)
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Configure free automated welcome emails and live invoice delivery to client inboxes.
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                <Mail className="w-5 h-5" />
+              </div>
+            </div>
+
+            {/* Quick Setup Guide banner */}
+            <div className="p-4 rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/50 dark:bg-blue-950/30 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-blue-900 dark:text-blue-300">
+                <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+                <span>How to Get Free Automated Welcome Emails (2-Min Setup)</span>
+              </div>
+              <ol className="text-xs text-slate-600 dark:text-slate-300 space-y-1 list-decimal list-inside">
+                <li>Create a free account on <a href="https://www.emailjs.com" target="_blank" rel="noreferrer" className="text-blue-600 dark:text-blue-400 underline font-semibold">EmailJS.com</a> (Free 200 emails/month).</li>
+                <li>Go to <strong>Email Services</strong> &gt; Add your Gmail/Outlook/SMTP &gt; copy your <strong>Service ID</strong>.</li>
+                <li>Go to <strong>Email Templates</strong> &gt; Create a Welcome Template &gt; copy your <strong>Template ID</strong>.</li>
+                <li>Go to <strong>Account &gt; API Keys</strong> &gt; copy your <strong>Public Key</strong>.</li>
+              </ol>
+            </div>
+
+            {/* Form Fields */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                  EmailJS Service ID
+                </label>
+                <input
+                  type="text"
+                  value={emailConfig.serviceId}
+                  onChange={(e) => setEmailConfig(prev => ({ ...prev, serviceId: e.target.value.trim() }))}
+                  placeholder="e.g. service_xxxxxxx"
+                  className="w-full px-3.5 py-2 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                  EmailJS Template ID
+                </label>
+                <input
+                  type="text"
+                  value={emailConfig.templateId}
+                  onChange={(e) => setEmailConfig(prev => ({ ...prev, templateId: e.target.value.trim() }))}
+                  placeholder="e.g. template_xxxxxxx"
+                  className="w-full px-3.5 py-2 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                  EmailJS Public Key
+                </label>
+                <input
+                  type="text"
+                  value={emailConfig.publicKey}
+                  onChange={(e) => setEmailConfig(prev => ({ ...prev, publicKey: e.target.value.trim() }))}
+                  placeholder="e.g. pub_xxxxxxxxxxxxxx"
+                  className="w-full px-3.5 py-2 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors font-mono"
+                />
+              </div>
+            </div>
+
+            {/* Test Email Dispatch Section */}
+            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 space-y-3">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block">
+                Send Live Test Verification Email
+              </span>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="email"
+                  value={testEmailTarget}
+                  onChange={(e) => setTestEmailTarget(e.target.value)}
+                  placeholder="yourname@gmail.com"
+                  className="flex-1 px-3.5 py-2 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={handleTestEmail}
+                  disabled={isTestingEmail || !testEmailTarget || !emailConfig.publicKey}
+                  className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-40 rounded-lg transition-all shadow-xs cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  <Mail className="w-3.5 h-3.5" />
+                  <span>{isTestingEmail ? 'Sending Test...' : 'Dispatch Test Email'}</span>
+                </button>
+              </div>
+
+              {testEmailStatus && (
+                <div className={`p-3 rounded-lg text-xs flex items-center gap-2 ${
+                  testEmailStatus.success
+                    ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800'
+                    : 'bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-200 border border-rose-200 dark:border-rose-800'
+                }`}>
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>{testEmailStatus.message}</span>
+                </div>
+              )}
             </div>
           </div>
         )}
