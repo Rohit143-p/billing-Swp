@@ -399,7 +399,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
           </div>
 
           {/* Customer Details Box */}
-          <div className="bg-slate-50 dark:bg-slate-850 p-3.5 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 p-3.5 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800">
             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">Billed To</p>
             <h4 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">{bill.customerName}</h4>
             <div className="flex flex-wrap gap-3 sm:gap-4 text-xs text-slate-600 dark:text-slate-300 mt-1.5">
@@ -490,7 +490,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
 
           {/* Payment Instructions & Bank Details */}
           {(activeConfig.bankName || activeConfig.upiOrPaypal || activeConfig.footerNote) && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
               <div>
                 <p className="font-bold text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">Payment Instructions</p>
                 {activeConfig.bankName && (
@@ -534,7 +534,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
           )}
 
           {/* Mode of Payment & Settlement Record */}
-          <div className="bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+          <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">
@@ -596,7 +596,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
           </div>
 
           {/* Delivery Channels */}
-          <div className="flex flex-wrap items-center gap-2 pt-2 text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-850 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800">
+          <div className="flex flex-wrap items-center gap-2 pt-2 text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800">
             <span className="font-semibold text-slate-500 dark:text-slate-400 mr-1">Instant Dispatch:</span>
             <button
               type="button"

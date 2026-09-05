@@ -24,11 +24,11 @@ export function getEmailConfig(): EmailJSConfig {
     console.warn('Failed to load email config from localStorage:', err);
   }
 
-  // Fallback to environment variables if provided
+  // Fallback to environment variables or default keys
   return {
-    serviceId: (import.meta as any).env?.VITE_EMAILJS_SERVICE_ID || '',
-    templateId: (import.meta as any).env?.VITE_EMAILJS_TEMPLATE_ID || '',
-    publicKey: (import.meta as any).env?.VITE_EMAILJS_PUBLIC_KEY || ''
+    serviceId: (import.meta as any).env?.VITE_EMAILJS_SERVICE_ID || 'service_jcq4xa2',
+    templateId: (import.meta as any).env?.VITE_EMAILJS_TEMPLATE_ID || 'template_pgq4888',
+    publicKey: (import.meta as any).env?.VITE_EMAILJS_PUBLIC_KEY || 'vXjTfF462hHjb6c40'
   };
 }
 

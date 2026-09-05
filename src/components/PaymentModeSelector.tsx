@@ -48,7 +48,7 @@ export const PaymentModeSelector: React.FC<PaymentModeSelectorProps> = ({
               className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center gap-2.5 ${
                 isSelected
                   ? 'border-blue-600 dark:border-blue-500 bg-blue-50/80 dark:bg-blue-900/40 ring-2 ring-blue-500/20 shadow-xs'
-                  : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-850 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50/60 dark:hover:bg-slate-800'
+                  : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50/60 dark:hover:bg-slate-800'
               }`}
             >
               <div

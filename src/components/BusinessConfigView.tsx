@@ -201,13 +201,13 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
             type="button"
             onClick={handleExportJson}
             title="Download JSON Backup"
-            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xs transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xs transition-colors cursor-pointer"
           >
             <Download className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
             <span>Export JSON</span>
           </button>
 
-          <label className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xs transition-colors cursor-pointer">
+          <label className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xs transition-colors cursor-pointer">
             <Upload className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
             <span>Import JSON</span>
             <input
@@ -251,7 +251,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
                 onClick={() => handleApplyPreset(preset)}
                 className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between group ${
                   isSelected
-                    ? 'border-blue-600 dark:border-blue-500 bg-white dark:bg-slate-850 shadow-xs ring-2 ring-blue-500/20'
+                    ? 'border-blue-600 dark:border-blue-500 bg-white dark:bg-slate-900 shadow-xs ring-2 ring-blue-500/20'
                     : 'border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
@@ -447,7 +447,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
                     className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer ${
                       formData.brandColor.toLowerCase() === swatch.hex.toLowerCase()
                         ? 'border-slate-800 dark:border-blue-400 bg-slate-100 dark:bg-slate-800 ring-2 ring-blue-500/20'
-                        : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-850'
+                        : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900'
                     }`}
                   >
                     <span
@@ -491,7 +491,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
                           className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
                             isSelected
                               ? 'border-blue-600 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 shadow-xs'
-                              : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-850 text-slate-700 dark:text-slate-300'
+                              : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300'
                           }`}
                         >
                           <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400'}`} />
@@ -592,7 +592,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
             </div>
 
             {/* Currency Selector */}
-            <div className="p-4 bg-slate-50/70 dark:bg-slate-850 rounded-xl border border-slate-200/70 dark:border-slate-800 space-y-3">
+            <div className="p-4 bg-slate-50/70 dark:bg-slate-900 rounded-xl border border-slate-200/70 dark:border-slate-800 space-y-3">
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 Display Currency Symbol & Code
               </label>
@@ -975,7 +975,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
             </div>
 
             {/* Test Email Dispatch Section */}
-            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 space-y-3">
+            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-3">
               <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block">
                 Send Live Test Verification Email
               </span>
@@ -1096,7 +1096,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
                     className={`py-2 px-3 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
                       (formData.lowStockThreshold || 10) === units
                         ? 'border-blue-600 bg-blue-600 text-white shadow-xs'
-                        : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-850 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                   >
                     {units} Units
@@ -1106,7 +1106,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
             </div>
 
             {/* Background Check Enablement Toggle */}
-            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 flex items-center justify-between gap-3">
+            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between gap-3">
               <div>
                 <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block">
                   Enable Background Stock Surveillance
@@ -1164,7 +1164,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
                   <button
                     type="button"
                     onClick={onLogout}
-                    className="self-start sm:self-center px-3 py-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400 bg-white dark:bg-slate-850 border border-rose-200 dark:border-rose-900/60 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer"
+                    className="self-start sm:self-center px-3 py-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400 bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900/60 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer"
                   >
                     Sign Out / Switch Account
                   </button>
@@ -1196,7 +1196,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
               </div>
             )}
 
-            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 space-y-2">
+            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-2">
               <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block">
                 Reset Configuration to Factory Defaults
               </span>
@@ -1235,7 +1235,7 @@ export const BusinessConfigView: React.FC<BusinessConfigViewProps> = ({
                     setTimeout(() => setSavedNotice(null), 3000);
                   }
                 }}
-                className="mt-2 border border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 bg-white dark:bg-slate-850 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center gap-2"
+                className="mt-2 border border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 bg-white dark:bg-slate-900 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center gap-2"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 Reset Demo Data
